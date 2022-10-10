@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -60,14 +61,11 @@ public class CountryCodePicker extends RelativeLayout {
     LayoutInflater mInflater;
     TextView textView_selectedCountry;
     EditText editText_registeredCarrierNumber;
-    RelativeLayout holder;
     ImageView imageViewArrow;
     ImageView imageViewFlag;
-    LinearLayout linearFlagBorder;
-    LinearLayout linearFlagHolder;
     CCPCountry selectedCCPCountry;
     CCPCountry defaultCCPCountry;
-    RelativeLayout relativeClickConsumer;
+    ConstraintLayout relativeClickConsumer;
     CountryCodePicker codePicker;
     TextGravity currentTextGravity;
     String originalHint = "";
@@ -218,12 +216,9 @@ public class CountryCodePicker extends RelativeLayout {
         }
 
         textView_selectedCountry = (TextView) holderView.findViewById(R.id.textView_selectedCountry);
-        holder = (RelativeLayout) holderView.findViewById(R.id.countryCodeHolder);
         imageViewArrow = (ImageView) holderView.findViewById(R.id.imageView_arrow);
         imageViewFlag = (ImageView) holderView.findViewById(R.id.image_flag);
-        linearFlagHolder = (LinearLayout) holderView.findViewById(R.id.linear_flag_holder);
-        linearFlagBorder = (LinearLayout) holderView.findViewById(R.id.linear_flag_border);
-        relativeClickConsumer = (RelativeLayout) holderView.findViewById(R.id.rlClickConsumer);
+        relativeClickConsumer = (ConstraintLayout) holderView.findViewById(R.id.rlClickConsumer);
         codePicker = this;
         if (attrs != null) {
             applyCustomProperty(attrs);
@@ -443,17 +438,6 @@ public class CountryCodePicker extends RelativeLayout {
             }
             if (contentColor != DEFAULT_UNSET) {
                 setContentColor(contentColor);
-            }
-
-            // flag border color
-            int borderFlagColor;
-            if (isInEditMode()) {
-                borderFlagColor = a.getColor(R.styleable.CountryCodePicker_ccp_flagBorderColor, 0);
-            } else {
-                borderFlagColor = a.getColor(R.styleable.CountryCodePicker_ccp_flagBorderColor, context.getResources().getColor(R.color.defaultBorderFlagColor));
-            }
-            if (borderFlagColor != 0) {
-                setFlagBorderColor(borderFlagColor);
             }
 
             //dialog colors
@@ -1114,14 +1098,6 @@ public class CountryCodePicker extends RelativeLayout {
 
     private void setHolderView(View holderView) {
         this.holderView = holderView;
-    }
-
-    public RelativeLayout getHolder() {
-        return holder;
-    }
-
-    private void setHolder(RelativeLayout holder) {
-        this.holder = holder;
     }
 
     boolean isAutoDetectLanguageEnabled() {
@@ -1965,16 +1941,6 @@ public class CountryCodePicker extends RelativeLayout {
     }
 
     /**
-     * Sets flag border color of CCP.
-     *
-     * @param borderFlagColor color to apply to flag border
-     */
-    public void setFlagBorderColor(int borderFlagColor) {
-        this.borderFlagColor = borderFlagColor;
-        linearFlagBorder.setBackgroundColor(this.borderFlagColor);
-    }
-
-    /**
      * Modifies size of text in side CCP view.
      *
      * @param textSize size of text in pixels
@@ -2111,26 +2077,12 @@ public class CountryCodePicker extends RelativeLayout {
 
     public void showFlag(boolean showFlag) {
         this.showFlag = showFlag;
-        refreshFlagVisibility();
         if (!isInEditMode())
             setSelectedCountry(selectedCCPCountry);
     }
 
-    private void refreshFlagVisibility() {
-        if (showFlag) {
-            if (ccpUseEmoji) {
-                linearFlagHolder.setVisibility(GONE);
-            } else {
-                linearFlagHolder.setVisibility(VISIBLE);
-            }
-        } else {
-            linearFlagHolder.setVisibility(GONE);
-        }
-    }
-
     public void useFlagEmoji(boolean useFlagEmoji) {
         this.ccpUseEmoji = useFlagEmoji;
-        refreshFlagVisibility();
         setSelectedCountry(selectedCCPCountry);
     }
 
